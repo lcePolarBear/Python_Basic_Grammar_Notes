@@ -1,4 +1,26 @@
 # HttpResponse 对象
+## HttpResponse 函数
+- 用于向浏览器返回数据
+- 语法：`HttpResponse(content=响应体, content_type=响应体数据类型, status=状态码)`
+- 示例：返回 html 内容，并设置响应头
+    ```python
+    # urls.py
+    from django.urls import path,re_path
+
+    urlpatterns = [
+        re_path('^index/$', views.index),
+    ]
+    ```
+    ```python
+    # views.py
+    from django.http import HttpResponse
+
+    def index(request):
+        res = HttpResponse("<h1>首页</h1>")
+        res['name'] = "aliang"
+        res.status_code = 302
+        return res
+    ```
 
 ## render 函数
 - render 指定模板，返回一个渲染后的 HttpResponse 对象
