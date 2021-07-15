@@ -1,4 +1,4 @@
-# 使用 ORM 实现 MySQL 数据库的增删查改
+# 使用 ORM 实现 MySQL 数据库的增删改查
 - ORM 将 Model Python 代码转化为 SQL 去操作数据库
 ## 将 Model 模型类映射到数据库中
 - 使用模型类定义一个 User 表，包含多字段
@@ -71,56 +71,94 @@
     - myapp_user
 
 ## ORM 增删查改
-- 增
-    ```python
-    # 前端设置 urils 路由调用 views
-    # views.py
-    from django.http import HttpResponse
-    from myapp.models import User
+### 增
+```python
+# 前端设置 urils 路由调用 views
+# views.py
+from django.http import HttpResponse
+from myapp.models import User
 
-    def data_add(request):
-        User.objects.create(
-            user='chen',
-            name='晨',
-            sex='man',
-            age=30,
-            label="teacher,student"
-        )
-        return HttpResponse("用户添加成功")
-    ```
-    或者
-    ```python
-    from django.http import HttpResponse
-    from myapp.models import User
+def data_add(request):
+    User.objects.create(
+        user='chen',
+        name='晨',
+        sex='man',
+        age=30,
+        label="teacher,student"
+    )
+    return HttpResponse("用户添加成功")
+```
+或者
+```python
+from django.http import HttpResponse
+from myapp.models import User
 
-    def data_add(request):
-        Obj = User(
-            user="kun",
-            name="坤",
-            sex="man",
-            age=20,
-            label="teacher,student"
-        )
-        Obj.save()
-        return HttpResponse("用户添加成功")
-    ```
-- 删
-    ```python
-    # views.py
-    from django.http import HttpResponse
-    from myapp.models import User
+def data_add(request):
+    Obj = User(
+        user="kun",
+        name="坤",
+        sex="man",
+        age=20,
+        label="teacher,student"
+    )
+    Obj.save()
+    return HttpResponse("用户添加成功")
+```
+### 删
+```python
+# views.py
+from django.http import HttpResponse
+from myapp.models import User
 
-    def data_delete(request):
-        User.objects.filter(id=1).delete()
-        return HttpResponse("id 为 1 的用户删除成功")
-    ```
-    或者
-    ```python
-    from django.http import HttpResponse
-    from myapp.models import User
+def data_delete(request):
+    User.objects.filter(id=1).delete()
+    return HttpResponse("id 为 1 的用户删除成功")
+```
+或者
+```python
+from django.http import HttpResponse
+from myapp.models import User
 
-    def data_delete(request):
-        obj = User.objects.get(id=1)
-        obj.delete()
-        return HttpResponse("id 为 1 的用户删除成功")
-    ```
+def data_delete(request):
+    obj = User.objects.get(id=1)
+    obj.delete()
+    return HttpResponse("id 为 1 的用户删除成功")
+```
+### 改
+```python
+# views.py
+from django.http import HttpResponse
+from myapp.models import User
+
+def data_select(request):
+    Obj = User.objects.filter(user="chen").update(age=27, label="运维开发")
+    return HttpResponse("数据已更改")
+```
+或者
+```python
+# views.py
+from django.http import HttpResponse
+from myapp.models import User
+
+def data_select(request):
+    obj = User.objects.get(user='chen')
+    obj.age = 25
+    obj.label = "工程师"
+    obj.save()
+    return HttpResponse("数据已更改")
+```
+### 查
+```python
+# views.py
+from django.shortcuts import render
+from myapp.models import User
+
+def data_select(request):
+    # 获取所有数据
+    Obj_all = User.objects.all()
+    # 获取指定数据
+    Obj_name = User.objects.filter(name="chen")
+    # User 类不支持使用算术运算符，作比较需要使用指定函数
+    Obj_age = User.objects.filter(age__gt=26)
+    return render(request, "index.html", {'Obj': Obj,'Obj_name': Obj_name,'Obj_age': Obj_age})
+```
