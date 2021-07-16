@@ -71,6 +71,7 @@
     - myapp_user
 
 ## ORM 增删查改
+- 在开始操作之前可以把 MySQL 的 general_log 开启，用以观察 ORM 执行的 sql 语句
 ### 增
 ```python
 # 前端设置 urils 路由调用 views
