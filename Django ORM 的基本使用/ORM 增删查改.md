@@ -191,3 +191,35 @@ def data_select(request):
     Obj_age = User.objects.filter(age__gt=26)
     return render(request, "index.html", {'Obj': Obj,'Obj_name': Obj_name,'Obj_age': Obj_age})
 ```
+
+## QuerySet 序列化
+- ORM 查询返回的是 QuerySet 对象，我们可以使用序列化转换为 json
+- 使用内建函数 serializers 完成转换
+    ```python
+    # views.py
+    from django.http import HttpResponse
+    from django.core import serializers
+    from myapp.models import User
+
+    def data_select(request):
+        Obj = User.objects.all()
+        data = serializers.serialize('json',Obj)
+        return HttpResponse(data)
+    ```
+- 或者遍历 QuerySet 对象将字段拼接成字典，再通过 json 库编码
+    ```python
+    # views.py
+    from django.http import HttpResponse
+    from myapp.models import User
+    import json
+
+    def data_select(request):
+        Obj = User.objects.all()
+        d = {}
+        for foo in Obj:
+            d['user'] = foo.user
+            d['name'] = foo.name
+            d['sex'] = foo.sex
+        data = json.dumps(d)
+        return HttpResponse(data)
+    ```
