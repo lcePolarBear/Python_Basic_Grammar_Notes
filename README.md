@@ -10,3 +10,14 @@ __2021/7/12 阿良的 Python 运维开发教程__
 - Django 模板系统
     - [变量]()
     - [标签]()
+    - 过滤器
+    - 模板
+- Django ORM 的基本使用
+    - 内置管理后台和 Meta 类
+    - ORM 增删查改
+- Django 多表操作
+    - 一对一
+    - 一对多
+    - 多对多
+
+> 如果不小心把 django migrate 创建的表删除了且无法通过 migeate 同步的方式重建，参考[这篇文章](https://blog.csdn.net/HD243608836/article/details/106499830)可以重建
