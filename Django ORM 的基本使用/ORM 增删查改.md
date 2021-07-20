@@ -57,7 +57,7 @@
     # 执行迁移文件生成表，生成的表不止包含有 User 表，还有 django 后台所需的表，即 INSTALLED_APPS 列表下所有的应用都会生成表
     python manage.py migrate
     ```
-- 使用 MySQL 工具端查看生成的数据表
+- 使用 MySQL 工具端查看生成的数据表，大部分生成的表为 Django 内置用户认证系统生成的表 [Django 用户认证系统]()
     - auth_group
     - auth_group_permissions
     - auth_permission
