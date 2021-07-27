@@ -35,7 +35,7 @@
     success | function(data, String, textStatus, jqXHR) | 请求成功后调用的函数，参数data：可选，由服务器返回的数据
     error | function(jqXHR, String, textStatus, errorThrown) | 请求失败时调用的函数
     complete | function(jqXHR, String, textStatus) | 请求完成后（无论成功还是失败）调用的函数
-
+    > jqXHR：一个 XMLHttpRequest 对象
 
 ### 使用 Ajax 从后台获取数据
 ```js
