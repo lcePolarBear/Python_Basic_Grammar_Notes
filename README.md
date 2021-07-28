@@ -23,8 +23,12 @@ __2021/7/12 阿良的 Python 运维开发教程__
     - [用户认证系统](https://github.com/lcePolarBear/Python_Basic_Grammar_Notes/blob/master/Django%20%E7%94%A8%E6%88%B7%E8%AE%A4%E8%AF%81%E7%B3%BB%E7%BB%9F/%E7%94%A8%E6%88%B7%E8%AE%A4%E8%AF%81%E7%B3%BB%E7%BB%9F.md)
 - Django Session 管理
     - [Session 和 Cookie 基础知识](https://github.com/lcePolarBear/Python_Basic_Grammar_Notes/blob/master/Django%20Session%20%E7%AE%A1%E7%90%86/Session%20%E5%92%8C%20Cookie%20%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86.md)
-    - [使用自定义的用户表和装饰器实现用户系统]()
+    - [使用自定义的用户表和装饰器实现用户系统](https://github.com/lcePolarBear/Python_Basic_Grammar_Notes/blob/master/Django%20Session%20%E7%AE%A1%E7%90%86/%E4%BD%BF%E7%94%A8%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84%E7%94%A8%E6%88%B7%E8%A1%A8%E5%92%8C%E8%A3%85%E9%A5%B0%E5%99%A8%E5%AE%9E%E7%8E%B0%E7%94%A8%E6%88%B7%E7%B3%BB%E7%BB%9F.md)
 - Django CSRF 防护
-    - [CSRF 工作原理]()
+    - [CSRF 工作原理](https://github.com/lcePolarBear/Python_Basic_Grammar_Notes/blob/master/Django%20CSRF%20%E9%98%B2%E6%8A%A4/CSRF%20%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86.md)
+- jQuery
+    - [jQuery 基本使用](https://github.com/lcePolarBear/Python_Basic_Grammar_Notes/blob/master/jQuery/jQuery%20%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8.md)
+    - [jQuery 操作 HTML](https://github.com/lcePolarBear/Python_Basic_Grammar_Notes/blob/master/jQuery/jQuery%20%E6%93%8D%E4%BD%9C%20HTML.md)
+    - [jQuery Ajax](https://github.com/lcePolarBear/Python_Basic_Grammar_Notes/blob/master/jQuery/jQuery%20Ajax.md)
 
 > 如果不小心把 django migrate 创建的表删除了且无法通过 migeate 同步的方式重建，参考[这篇文章](https://blog.csdn.net/HD243608836/article/details/106499830)可以重建
