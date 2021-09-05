@@ -5,6 +5,7 @@
 ### jQuery Ajax 主要使用 $.ajax() 方法实现，用于向服务端发送 HTTP 请求
 - 语法： `$.ajax([settings]);`
 - settings 是 $.ajax() 方法的参数列表，用于配置 Ajax 请求的键值对集合
+
 参数 | 类型 | 描述
 --- | --- | ---
 url | string | 发送请求的地址，默认为当前页地址
