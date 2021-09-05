@@ -5,17 +5,17 @@
 ### jQuery Ajax 主要使用 $.ajax() 方法实现，用于向服务端发送 HTTP 请求
 - 语法： `$.ajax([settings]);`
 - settings 是 $.ajax() 方法的参数列表，用于配置 Ajax 请求的键值对集合
-    参数 | 类型 | 描述
-    --- | --- | ---
-    url | string | 发送请求的地址，默认为当前页地址
-    type | string | 请求方式，默认为 GET
-    data | object,array,string | 发送到服务器的数据
-    dataType | string | 预期服务器返回的数据类型，包括JSON、XML、text、HTML等
-    contentType | string | 发送信息至服务器时内容编码类型。默认值: "application/x-www-form-urlencoded"
-    timeout | number | 设置请求超时时间
-    global | Boolean | 表示是否触发全局 Ajax 事件，默认为 true
-    headers | object | 设置请求头信息
-    async | Boolean | 默认 true ，所有请求均为异步请求。设置 false 发送同步请求
+参数 | 类型 | 描述
+--- | --- | ---
+url | string | 发送请求的地址，默认为当前页地址
+type | string | 请求方式，默认为 GET
+data | object,array,string | 发送到服务器的数据
+dataType | string | 预期服务器返回的数据类型，包括JSON、XML、text、HTML等
+contentType | string | 发送信息至服务器时内容编码类型。默认值: "application/x-www-form-urlencoded"
+timeout | number | 设置请求超时时间
+global | Boolean | 表示是否触发全局 Ajax 事件，默认为 true
+headers | object | 设置请求头信息
+async | Boolean | 默认 true ，所有请求均为异步请求。设置 false 发送同步请求
 
 ### HTTP 方法
 - 用于向服务器提交数据，服务器根据对应方法操作
