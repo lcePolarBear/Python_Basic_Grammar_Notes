@@ -293,3 +293,86 @@
         else:
             return "操作方法不允许!"
     ```
+6. 添加搜索框
+    1. 表格添加搜索框和搜索按钮
+        ```html
+        <!--index.html-->
+        <!--借用 toolbarDemo 头部工具栏的位置，添加一个 input 输入框和搜索按钮-->
+        <script type="text/html" id="toolbarDemo">
+            <input id="searchkey" type="text" class="layui-input" style="width: 300px;float: left"/>
+            <button id="searchBtn" type="button" class="layui-btn layui-btn-primary" style="float: left">搜索</button>
+        </script>
+        ```
+    2. js 绑定按钮事件并获取 input 输入框的值, table.reload 重载表格，传递参数获取对应数据
+        ```html
+        <script>
+        layui.use(['table'], function () {
+            var table = layui.table;
+            var $ = layui.jquery;
+
+            table.render({
+                // 此处省略,注意要为 table 添加 id 标签用于为 reload 绑定 table
+                , id: 'TT'  //设置 table id 标签
+            });
+            $(document).on('click', '#searchBtn', function () {
+                var input_val = $('#searchkey').val();
+                table.reload('TT', {    //绑定 table id 标签
+                    url: '/user'
+                    ,where: {
+                        searchKey: input_val
+                    }//设定异步数据接口的额外参数
+                });
+            });
+        });
+        </script>
+        ```
+    3. 后台逻辑
+        ```python
+        # views.py
+        def user(request):
+            if request.method == "GET":
+
+                # 获取传入的搜索值
+                searchkey = request.GET.get('searchKey')
+
+                """
+                数据表格接受的数据格式：
+                {
+                "code": 0,
+                "totalRow": {
+                    "score": "666"
+                    ,"experience": "999"
+                },
+                "data": [{}, {}],
+                "msg": "",
+                "count": 1000
+                }
+                :param request:
+                :return:
+                """
+                # 模拟从数据库拉取数据
+                try:
+                    data = []
+                    # 校验是否存在搜索值
+                    if(searchkey):
+                        # 模拟存在搜索值,进行数据索引
+                        row = {'id': searchkey, 'username': 'adsfg', 'age': searchkey}
+                        data.append(row)
+                    else:
+                        # 如果不存在搜索值,将返回所有数据
+                        for id in range(1,100):
+                            row = {'id': id, 'username': 'adsfg', 'age': id}
+                            data.append(row)
+                    code = 0
+                    msg = "获取数据成功"
+                except Exception:
+                    data = ""
+                    code = 1
+                    msg = "获取数据失败"
+
+                count = len(data)
+                data = data[start:end]
+
+                result = {'code':code, 'msg': msg, 'data': data, 'count': count}
+                return JsonResponse(result)
+        ```
