@@ -293,7 +293,7 @@
         else:
             return "操作方法不允许!"
     ```
-6. 添加搜索框
+6. 添加搜索框实现条件查询
     1. 表格添加搜索框和搜索按钮
         ```html
         <!--index.html-->
@@ -376,3 +376,74 @@
                 result = {'code':code, 'msg': msg, 'data': data, 'count': count}
                 return JsonResponse(result)
         ```
+7. 添加选择框实现条件查询
+    ```html
+    <script>
+    layui.use(['table'], function () {
+        var table = layui.table;
+        var $ = layui.jquery;
+        var form = layui.form;
+
+        table.render({
+            // 此处省略,注意要为 table 添加 id 标签用于为 reload 绑定 table
+            , id: 'TT'
+        });
+
+        form.on('select(age)', function(data) {  // 绑定select选择事件，会把选择的值放到函数的第一个位置参数
+            var select_val = data.value;
+            table.reload('TT', {    //绑定 table id 标签
+                url: '/user'
+                ,where: {
+                    selectSex: select_val
+                }
+            });
+        });
+    });
+    </script>
+    ```
+    ```python
+    # views.py
+    def user(request):
+        if request.method == "GET":
+            select_val = request.GET.get('selectSex')
+
+            """
+            数据表格接受的数据格式：
+            {
+            "code": 0,
+            "totalRow": {
+                "score": "666"
+                ,"experience": "999"
+            },
+            "data": [{}, {}],
+            "msg": "",
+            "count": 1000
+            }
+            :param request:
+            :return:
+            """
+            # 模拟从数据库拉取数据
+            try:
+                data = []
+                # 校验是否存在搜索值
+                if(select_val):
+                    # 模拟存在搜索值,进行数据索引
+                    row = {'id': select_val, 'username': 'adsfg', 'age': select_val}
+                    data.append(row)
+                else:
+                    for id in range(1,100):
+                        row = {'id': id, 'username': 'adsfg', 'age': id}
+                        data.append(row)
+                code = 0
+                msg = "获取数据成功"
+            except Exception:
+                data = ""
+                code = 1
+                msg = "获取数据失败"
+
+            count = len(data)
+            data = data[start:end]
+
+            result = {'code':code, 'msg': msg, 'data': data, 'count': count}
+            return JsonResponse(result)
+    ```
