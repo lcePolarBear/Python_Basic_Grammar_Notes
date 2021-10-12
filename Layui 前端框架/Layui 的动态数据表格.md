@@ -447,3 +447,33 @@
             result = {'code':code, 'msg': msg, 'data': data, 'count': count}
             return JsonResponse(result)
     ```
+8. 美化数据表格
+    ```html
+    <script>
+    layui.use(['table'], function () {
+        var table = layui.table;
+        var $ = layui.jquery;
+        var form = layui.form;
+
+        table.render({
+            /*
+            此处省略,注意要为指定列添加 templet 标签用于绑定新样式
+            */
+            , cols: [[
+                {checkbox: true}
+                , {field: 'id', title: 'ID', width: 80, sort: true}
+                , {field: 'username', title: '用户名', width: 120}
+                , {field: 'age', title: '年龄', width: 120, templet: ageFormat}
+            ]]
+        });
+
+        function ageFormat(d) {
+            if(d.age == "12"){
+                return '<span style="color: #00FF00">' + d.age + '<span>'
+            }else{
+                return '<span style="color: #0000FF">' + d.age + '<span>'
+            }
+        }
+    });
+    </script>
+    ```
