@@ -30,5 +30,11 @@ __2021/7/12 阿良的 Python 运维开发教程__
     - [jQuery 基本使用](https://github.com/lcePolarBear/Python_Basic_Grammar_Notes/blob/master/jQuery/jQuery%20%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8.md)
     - [jQuery 操作 HTML](https://github.com/lcePolarBear/Python_Basic_Grammar_Notes/blob/master/jQuery/jQuery%20%E6%93%8D%E4%BD%9C%20HTML.md)
     - [jQuery Ajax](https://github.com/lcePolarBear/Python_Basic_Grammar_Notes/blob/master/jQuery/jQuery%20Ajax.md)
+- Layui 前端样式
+    - [Layui 的使用方法和基础组件](https://github.com/lcePolarBear/Python_Basic_Grammar_Notes/blob/master/Layui%20%E5%89%8D%E7%AB%AF%E6%A1%86%E6%9E%B6/Layui%20%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95%E5%92%8C%E5%9F%BA%E7%A1%80%E7%BB%84%E4%BB%B6.md)
+    - [Layui 文件上传](https://github.com/lcePolarBear/Python_Basic_Grammar_Notes/blob/master/Layui%20%E5%89%8D%E7%AB%AF%E6%A1%86%E6%9E%B6/Layui%20%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0.md)
+    - [Layui 的表单](https://github.com/lcePolarBear/Python_Basic_Grammar_Notes/blob/master/Layui%20%E5%89%8D%E7%AB%AF%E6%A1%86%E6%9E%B6/Layui%20%E7%9A%84%E8%A1%A8%E5%8D%95.md)
+    - [Layui 的动态数据表格](https://github.com/lcePolarBear/Python_Basic_Grammar_Notes/blob/master/Layui%20%E5%89%8D%E7%AB%AF%E6%A1%86%E6%9E%B6/Layui%20%E7%9A%84%E5%8A%A8%E6%80%81%E6%95%B0%E6%8D%AE%E8%A1%A8%E6%A0%BC.md)
+    - [layui 的弹出层](https://github.com/lcePolarBear/Python_Basic_Grammar_Notes/blob/master/Layui%20%E5%89%8D%E7%AB%AF%E6%A1%86%E6%9E%B6/layui%20%E7%9A%84%E5%BC%B9%E5%87%BA%E5%B1%82.md)
 
 > 如果不小心把 django migrate 创建的表删除了且无法通过 migeate 同步的方式重建，参考[这篇文章](https://blog.csdn.net/HD243608836/article/details/106499830)可以重建
