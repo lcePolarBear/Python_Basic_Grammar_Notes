@@ -110,5 +110,45 @@
     ```
 - 创建 Service 资源
     ```python
+    from kubernetes import client,config
+    import os
 
+    kubeconfig = os.path.join(os.getcwd(), "config")
+    config.load_kube_config(kubeconfig)
+    core_api = client.CoreV1Api()
+
+    namespace = "default"
+    name = "api-test"
+    selector = {'a':'1', 'b':'2'}
+    port = 80
+    target_port = 80
+    type = "NodePort"
+    body = client.V1Service(api_version="v1",
+                            kind= "Service",
+                            metadata= client.V1ObjectMeta(name= name),
+                            spec= client.V1ServiceSpec(selector= selector,
+                                                    ports= [client.V1ServicePort(port= port,
+                                                                                target_port=  arget_port)],
+                                                    type= type)
+                            )
+    try:
+        # 创建 service 资源
+        core_api.create_namespaced_service(namespace= namespace, body= body)
+    except Exception as e:
+        print(e)
+    ```
+- 删除 Service 资源
+    ```python
+    from kubernetes import client,config
+    import os
+
+    kubeconfig = os.path.join(os.getcwd(), "config")
+    config.load_kube_config(kubeconfig)
+    core_api = client.CoreV1Api()
+
+    try:
+        # 删除指定的 service 资源
+        core_api.delete_namespaced_service(namespace= "default", name= "api-test")
+    except Exception as e:
+        print(e)
     ```
