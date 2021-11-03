@@ -26,7 +26,33 @@
         print(dp.metadata.name)
     ```
     - 如能打印出 k8s 群集中的所有 deployment 资源类型说明连接成功
+- 使用 Token 创建 k8s 连接
+    ```python
+    from kubernetes import client
+    import os
 
+    configuration = client.Configuration()
+
+    # 指定 apiserver 地址
+    configuration.host = "https://192.168.102.249:16443"
+
+    # 指定 k8s 群集证书
+    ca_file = os.path.join(os.getcwd(),"ca.crt")
+    configuration.ssl_ca_cert = ca_file
+
+    # 启用证书验证
+    configuration.verify_ssl = True
+
+    # 指定 k8s 字符串
+    token = "xxxxxxxxxxxxxxx"
+    configuration.api_key = {"authorization": "Bearer " + token}
+    client.Configuration.set_default(configuration)
+    apps_api = client.AppsV1Api()
+
+    # 打印 Deployment 对象名称
+    for dp in apps_api.list_deployment_for_all_namespaces().items:
+        print(dp.metadata.name)
+    ```
 ### 使用客户端操作 Deployment 资源
 - 查询 deployment 资源
     ```python
