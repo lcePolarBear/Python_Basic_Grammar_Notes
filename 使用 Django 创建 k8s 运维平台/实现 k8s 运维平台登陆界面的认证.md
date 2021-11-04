@@ -138,3 +138,10 @@ def self_login_required(func):
 def index(request):
     return render(request, "index.html")
 ```
+### 注销登录
+```python
+# dashboard/views.py
+def logout(request):
+    request.session.flush()
+    return redirect(login)
+```
