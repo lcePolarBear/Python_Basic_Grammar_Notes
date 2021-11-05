@@ -6,8 +6,7 @@
 <ul class="layui-nav layui-layout-left">
     <div class="namespace">
         <select name="namespace" id="nsselect">
-            <option value="test1">test1</option>
-            <option value="test2">test2</option>
+
         </select>
     </div>
 </ul>
@@ -87,4 +86,64 @@ def namespace_api(request):
 
         result = {'code': code, 'msg': msg, 'count': len(list), 'list': list}
         return JsonResponse(result)
+```
+### 将当前选择的命名空间保存到本地浏览器，使用 session 存储，以便其他页面使用
+```python
+# templates/base.html
+<script src="/static/layui/layui.js"></script>
+<script>
+    layui.use(['layer'], function(){
+        var $ = layui.jquery;
+        var layer = layui.layer;
+
+        $.ajax({
+            type: "GET"
+            ,async: false // 禁用异步以实现加载完命名空间后再执行其他操作
+            ,url: "{% url 'namespace_api' %}"
+            ,success: function (res) {
+                if(res.code == 0){
+                    for(let index in res.list){
+                        row = res.list[index];
+                        // 将遍历出的 namespace 值添加到 select 的 option 标签中
+                        $('#nsselect').append('<option value="'+row.name+'">'+row.name+'</option>')
+                    }
+                    // 设置默认的命名空间
+                    $('#nsselect').val('default')
+                }else {
+                    layer.open({
+                    type: 0
+                    ,title: ['命名空间查询失败！!']
+                    ,content: res.msg
+                })
+                }
+            },error: function (res) {
+                layer.open({
+                    type: 0
+                    ,title: ['faild!']
+                    ,content: res.msg
+                })
+            }
+        })
+
+        // 创建浏览器缓存
+        var storage = window.sessionStorage;
+        // 当前获取 select 标签值
+        var current_ns = $("#nsselect").val()
+        //查看 namespace 资源是否已选定
+        var ns = storage.getItem('namespace')
+        if(ns == null){
+            // 没有选定则将当前 select 标签值作为选定的 namespace 值
+            storage.setItem('namespace', current_ns)
+        }else{
+            // 若已选定则将 select 标签值改为选定的 namespace 值
+            $("#nsselect").val(ns)
+        }
+
+        // 选择命名空间触发
+        $("#nsselect").change(function () {
+            current_ns = $("#nsselect").val();
+            storage.setItem('namespace', current_ns)
+        })
+    });
+</script>
 ```
