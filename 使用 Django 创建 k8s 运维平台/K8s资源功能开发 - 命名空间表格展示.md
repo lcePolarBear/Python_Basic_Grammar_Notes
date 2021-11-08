@@ -98,3 +98,64 @@ layui.use('table', function(){
         }
     </style>
 ```
+
+### 实现 namespace 资源搜索
+- 添加搜索框
+```html
+// namespace.html
+{% block content %}
+    {% csrf_token %}
+    <div class="layui-card">
+        <div class="layui-card-body layui-row">
+            <div class="layui-col-md12 layui-col-space10">
+                <button class="layui-btn" style="float: left">创建资源</button>
+                <button class="layui-btn" style="float: right" id="searchBtn">搜索资源</button>
+                <input type="text" name="name" class="layui-input" style="float: right; width: 300px">
+            </div>
+            <div class="layui-col-md12">
+                <table id="demo" lay-filter="test"></table>
+                <!--添加工具条-->
+                <script type="text/html" id="barDemo">
+                <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="yaml">查看 YAML</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+                </script>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+```
+- 通过动态表格数据重载实现搜索后数据刷新
+```js
+// 实现资源搜索功能
+$('#searchBtn').click(function () {
+    var search_key = $('input[name="name"]').val()
+    table.reload('TT', {
+        where: {
+            search_key: search_key
+        }
+    })
+})
+```
+- 后台提供数据表格重载的信息接口
+```python
+# k8s/views.py/namespace_api
+try:
+    search_key = request.GET.get('search_key')
+    for ns in core_api.list_namespace().items:
+        name = ns.metadata.name
+        labels = ns.metadata.labels
+        create_time = ns.metadata.creation_timestamp
+        item = {'name': name, 'labels': labels, 'create_time': create_time}
+        # 判断是否为查询情况
+        if search_key:
+            if search_key == name:
+                list.append(item)
+        else:
+            list.append(item)
+    code = 0
+    msg = "success!"
+except Exception as e:
+    status = getattr(e, 'status')
+    code = str(status)
+    msg = "faild!"
+```
