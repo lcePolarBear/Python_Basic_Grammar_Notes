@@ -1,8 +1,8 @@
-# K8s资源功能开发 - 命名空间表格展示
+# K8s 资源功能开发 - Namespace 资源
 
 ### 创建一个数据表格
-```js
-// namespace.html
+```html
+<!-- template/k8s/namespace.html -->
 # templates/k8s/namespace.html
 {% extends 'base.html' %}
 {% block title %}Namespaces{% endblock %}
@@ -42,8 +42,8 @@ layui.use('table', function(){
 ```
 
 ### 实现 namespace 资源多标签显示
-```js
-// namespace.html
+```html
+<!-- template/k8s/namespace.html -->
 {% block ex_js %}
 <script>
 layui.use('table', function(){
@@ -108,7 +108,7 @@ layui.use('table', function(){
     <div class="layui-card">
         <div class="layui-card-body layui-row">
             <div class="layui-col-md12 layui-col-space10">
-                <button class="layui-btn" style="float: left">创建资源</button>
+                <button class="layui-btn" style="float: left" id="create">创建资源</button>
                 <button class="layui-btn" style="float: right" id="searchBtn">搜索资源</button>
                 <input type="text" name="name" class="layui-input" style="float: right; width: 300px">
             </div>
@@ -158,4 +158,105 @@ except Exception as e:
     status = getattr(e, 'status')
     code = str(status)
     msg = "faild!"
+```
+### 实现 namespace 资源的添加
+- 使用 layer 配合 form 实现信息的提交
+```html
+<!--首先创建一个 form 表单，然后通过提交到后台实现资源的创建-->
+<!--base.html-->
+<!--layer 的 form 最好放在 body 标签以外，所以在 base.html 额外使用一个 block 接入 form-->
+<!--.......-->
+</body>
+{% block ex_form %}{% endblock %}
+</html>
+
+<!--namespace.html-->
+{% block ex_form %}
+    <div id="ck">
+        <form class="layui-form" onsubmit="return false">
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 160px">namespace 资源名称：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="title" required lay-verify="required" placeholder="请输入" autocomplete="off"
+                           class="layui-input" style="width: 200px">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formDemo">提交</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block ex_js %}
+    <script>
+        layui.use(['table', 'form'], function () {
+            var $ = layui.jquery;
+            var csrf_token = $('[name="csrfmiddlewaretoken"]').val();   //获取 csrf
+            var table = layui.table;
+            var form = layui.form;
+            var layer = layui.layer
+
+            ....
+
+            // 创建按钮触发创建 namespace 资源事件
+            $('#create').on('click', function () {
+                layer.open({
+                    title: "create namespace resource"
+                    , type: 1   // 1 表示以页面为内容载体弹出
+                    , content: $("#ck").html()
+                    , area: ['400px', '200px']
+                    , success: function () {
+                        form.on('submit(formDemo)', function (data) {
+                            $.ajax({
+                                url: '{% url "namespace_api" %}'
+                                , type: 'POST'
+                                , data: data.field
+                                , headers: {'X-CSRFToken': csrf_token}
+                                , dataType: 'json'
+                                // 提交成功回调函数
+                                , success: function (res) {
+                                    if (res.code == '0') {
+                                        layer.msg(res.msg, {icon: 6, time: 4000});
+                                        window.location.reload()
+                                    } else {
+                                        layer.msg(res.msg, {icon: 5})
+                                    }
+                                }
+                                // 访问接口失败函数
+                                , error: function (res) {
+                                    layer.msg("服务器接口异常！", {icon: 5})
+                                }
+                            })
+                        })
+                    }
+                })
+            })
+```
+```python
+# k8s/views.py
+def namespace_api(request):
+    """
+    内容忽略
+    """
+    elif request.method == "POST":
+        name = request.POST.get("title")
+        body = client.V1Namespace(
+            api_version="v1"
+            , kind="Namespace"
+            , metadata=client.V1ObjectMeta(
+                name=name
+            )
+        )
+        try:
+            core_api.create_namespace(body=body)
+            code = 0
+            msg = "success!"
+        except Exception as e:
+            msg = str(e)
+            code = 1
+        result = {'code': code, 'msg': msg}
+    return JsonResponse(result) 
 ```
