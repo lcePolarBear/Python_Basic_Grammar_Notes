@@ -1297,3 +1297,93 @@ def replicaset_api(request):
         res = {"code": 1, "msg": "代码调试中，等待完成"}
     return JsonResponse(res)
 ```
+### 实现 deployment 资源的扩容和缩容
+```python
+# workload/views.py
+@k8s.self_login_required
+def deployment_api(request):
+    """
+    忽略其他内容
+    """
+    elif request.method == "PUT":
+        # 更新
+        request_data = QueryDict(request.body)
+        name = request_data.get("name")
+        namespace = request_data.get("namespace")
+        replicas = int(request_data.get("replicas"))
+        try:
+            body = app_api.read_namespaced_deployment(name=name, namespace=namespace)
+            current_replicas = body.spec.replicas
+            min_replicas = 0
+            max_replicas = 20
+            if replicas > current_replicas and replicas < max_replicas:
+                # body = body.spec.template.spec.containers[0].image = "nginx:1.17"
+                body.spec.replicas = replicas  # 更新对象内副本值
+                app_api.patch_namespaced_deployment(name=name, namespace=namespace, body=body)
+                msg = "扩容成功！"
+                code = 0
+            elif replicas < current_replicas and replicas > min_replicas:
+                body.spec.replicas = replicas
+                app_api.patch_namespaced_deployment(name=name, namespace=namespace, body=body)
+                msg = "缩容成功！"
+                code = 0
+            elif replicas == current_replicas:
+                msg = "副本数一致！"
+                code = 1
+            elif replicas > max_replicas:
+                msg = "副本数设置过大！请联系管理员操作。"
+                code = 1
+            elif replicas == min_replicas:
+                msg = "副本数不能设置0！"
+                code = 1
+        except Exception as e:
+            msg = str(e)
+            code = 1
+        result = {"code": code, "msg": msg}
+```
+```js
+// template/deployments.html
+table.on('tool(test)', function (obj) {
+    var data = obj.data;
+    //console.log(obj)
+    if (obj.event === 'del') {
+        //
+    } else if (obj.event === 'yaml') {
+        //
+    } else if (obj.event === "details") {
+        //
+    } else if (obj.event === "scale") {
+        layer.prompt({
+            formType: 0
+            , title: "扩容/缩容（副本数）"
+            , value: data.replicas
+        }, function (value, index) {
+            data['replicas'] = value
+            $.ajax({
+                type: "PUT",
+                url: "{% url 'deployment_api' %}",
+                data: data,
+                headers: {'X-CSRFToken': csrf_token},
+                success: function (res) {
+                    if (res.code == 0) {
+                        layer.msg(res.msg, {icon: 6, time: 6000}) // 默认停顿3秒
+                        obj.update({
+                            replicas: value
+                        })
+                    } else {
+                        layer.msg(res.msg, {icon: 5})
+                    }
+                },
+                error: function () {
+                    layer.open({
+                        type: 0,
+                        title: ['异常信息'],
+                        content: "服务器接口异常！"
+                    })
+                }
+            });
+            layer.close(index)
+        });
+    }
+});
+```
