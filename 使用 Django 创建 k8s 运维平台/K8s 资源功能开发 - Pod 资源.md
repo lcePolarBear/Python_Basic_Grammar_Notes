@@ -333,4 +333,252 @@ def pod_log(request):
 ```
 ### 实现容器终端功能
 - 加载前端库 xterm.js
-- 使用 Channels 在 Django 创建 websocket 通信
+- 使用 Channels 在 Django 创建 websocket 通信（注意版本需为 2.4.0）
+```js
+// template/workload/terminal.html
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>容器终端</title>
+    <link href="/static/xterm/xterm.css" rel="stylesheet" type="text/css"/>
+    <style>
+        body {
+            background-color: black
+        }
+
+        .terminal-window {
+            background-color: #2f4050;
+            width: 99%;
+            color: white;
+            line-height: 25px;
+            margin-bottom: 10px;
+            font-size: 18px;
+            padding: 10px 0 10px 10px
+        }
+
+        .containers select, .containers option {
+            width: 100px;
+            height: 25px;
+            font-size: 18px;
+            color: #2F4056;
+            text-overflow: ellipsis;
+            outline: none;
+        }
+    </style>
+</head>
+
+<body>
+<div class="terminal-window">
+    <div class="containers">
+        Pod名称：{{ connect.pod_name }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        容器：
+        <select name="container_name" id="containerSelect">
+            {% for c in connect.containers %}
+                <option value="{{ c }}">{{ c }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+<div id="terminal" style="width: 100px;"></div>
+</body>
+
+<script src="/static/xterm/xterm.js"></script>
+
+<script>
+
+    var term = new Terminal({cursorBlink: true, rows: 70});
+    term.open(document.getElementById('terminal'));
+
+    var auth_type = '{{ connect.auth_type }}';
+    var token = '{{ connect.token }}';
+    var namespace = '{{ connect.namespace }}';
+    var pod_name = '{{ connect.pod_name }}';
+    var container = document.getElementById('containerSelect').value;
+
+    // 打开一个 websocket，django也会把sessionid传过去
+    var ws = new WebSocket('ws://' + window.location.host + '/workload/terminal/' + namespace + '/' + pod_name + '/' + container + '/?auth_type=' + auth_type + '&token=' + token);
+
+    //打开websocket连接，并打开终端
+    ws.onopen = function () {
+        // 实时监控输入的字符串发送到后端
+        term.on('data', function (data) {
+            ws.send(data);
+        });
+
+        ws.onerror = function (event) {
+            console.log('error:' + e);
+        };
+        //读取服务器发送的数据并写入web终端
+        ws.onmessage = function (event) {
+            term.write(event.data);
+        };
+        // 关闭websocket
+        ws.onclose = function (event) {
+            term.write('\n\r\x1B[1;3;31m连接关闭！\x1B[0m');
+        };
+    };
+
+</script>
+</html>
+
+// template/workload/pods.html
+table.on('tool(test)', function (obj) {
+    var data = obj.data;
+    //console.log(obj)
+    if (obj.event === 'del') {
+        //
+    } else if (obj.event === 'yaml') {
+        //
+    } else if (obj.event === 'log') {
+        //
+    } else if (obj.event === 'terminal') {
+        // 逗号拼接容器名, 例如containers=c1,c2
+        cs = data['containers'];
+        containers = "";
+        for (let c in cs) {
+            if (c < cs.length - 1) {
+                containers += cs[c]['c_name'] + ","
+            } else {
+                containers += cs[c]['c_name']
+            }
+        }
+        layer.open({
+            title: "容器终端",
+            type: 2,  // 加载层，从另一个网址引用
+            area: ['50%', '60%'],
+            content: '{% url "terminal" %}?namespace=' + data["namespace"] + "&pod_name=" + data["name"] + "&containers=" + containers,
+        });
+    }
+});
+```
+```python
+# workload/views.py
+from django.views.decorators.clickjacking import xframe_options_exempt
+@xframe_options_exempt
+@k8s.self_login_required
+def terminal(request):
+    namespace = request.GET.get("namespace")
+    pod_name = request.GET.get("pod_name")
+    containers = request.GET.get("containers").split(',')  # 返回 nginx1,nginx2，转成一个列表方便前端处理
+    auth_type = request.session.get(
+        'auth_type')  # 认证类型和token，用于传递到websocket，websocket根据sessionid获取token，让websocket处理连接k8s认证用
+    token = request.session.get('token')
+    connect = {'namespace': namespace, 'pod_name': pod_name, 'containers': containers, 'auth_type': auth_type,
+               'token': token}
+    print("========")
+    print(connect)
+    return render(request, 'workload/terminal.html', {'connect': connect})
+```
+```python
+# devops/settings.py
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'dashboard',
+    'channels'
+]
+
+ASGI_APPLICATION = 'devops.routing.application'
+```
+```python
+# devops/routing.py
+from channels.auth import AuthMiddlewareStack
+from channels.routing import ProtocolTypeRouter, URLRouter
+
+from django.urls import re_path
+from devops.consumers import StreamConsumer
+
+application = ProtocolTypeRouter({
+    'websocket': AuthMiddlewareStack(
+        URLRouter([
+            re_path(r'^workload/terminal/(?P<namespace>.*)/(?P<pod_name>.*)/(?P<container>.*)/', StreamConsumer),
+        ])
+    ),
+})
+```
+```python
+# devops/consumers.py
+from channels.generic.websocket import WebsocketConsumer
+from kubernetes.stream import stream
+from threading import Thread
+from kubernetes import client
+from devops import k8s
+
+# 多线程
+class K8sStreamThread(Thread):
+    def __init__(self, websocket, container_stream):
+        Thread.__init__(self)
+        self.websocket = websocket
+        self.stream = container_stream
+
+    def run(self):
+        while self.stream.is_open():
+            # 读取标准输出
+            if self.stream.peek_stdout():
+                stdout = self.stream.read_stdout()
+                self.websocket.send(stdout)
+            # 读取错误输出
+            if self.stream.peek_stderr():
+                stderr = self.stream.read_stderr()
+                self.websocket.send(stderr)
+        else:
+            self.websocket.close()
+
+# 继承WebsocketConsumer 类，并修改下面几个方法，主要连接到容器
+class StreamConsumer(WebsocketConsumer):
+
+    def connect(self):
+        print("ok")
+        # self.scope 请求头信息
+        self.namespace = self.scope["url_route"]["kwargs"]["namespace"]
+        self.pod_name = self.scope["url_route"]["kwargs"]["pod_name"]
+        self.container = self.scope["url_route"]["kwargs"]["container"]
+
+        k8s_auth = self.scope["query_string"].decode()  # b'auth_type=kubeconfig&token=7402e616e80cc5d9debe66f31b7a8ed6'
+        auth_type = k8s_auth.split('&')[0].split('=')[1]
+        token = k8s_auth.split('&')[1].split('=')[1]
+
+        k8s.laod_auth_config(auth_type, token)
+        core_api = client.CoreV1Api()
+
+        exec_command = [
+            "/bin/sh",
+            "-c",
+            'TERM=xterm-256color; export TERM; [ -x /bin/bash ] '
+            '&& ([ -x /usr/bin/script ] '
+            '&& /usr/bin/script -q -c "/bin/bash" /dev/null || exec /bin/bash) '
+            '|| exec /bin/sh']
+        try:
+
+            self.conn_stream = stream(core_api.connect_get_namespaced_pod_exec,
+                                 name=self.pod_name,
+                                 namespace=self.namespace,
+                                 command=exec_command,
+                                 container=self.container,
+                                 stderr=True, stdin=True,
+                                 stdout=True, tty=True,
+                                 _preload_content=False)
+            kube_stream = K8sStreamThread(self, self.conn_stream)
+            kube_stream.start()
+        except Exception as e:
+            print(e)
+            status = getattr(e, "status")
+            if status == 403:
+                msg = "你没有进入容器终端权限！"
+            else:
+                msg = "连接容器错误，可能是传递的参数有问题！"
+            print(msg)
+
+        self.accept()
+
+    def disconnect(self, close_code):
+        self.conn_stream.write_stdin('exit\r')
+
+    def receive(self, text_data):
+        self.conn_stream.write_stdin(text_data)
+```
