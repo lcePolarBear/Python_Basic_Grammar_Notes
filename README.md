@@ -36,5 +36,25 @@ __2021/7/12 阿良的 Python 运维开发教程__
     - [Layui 的表单](https://github.com/lcePolarBear/Python_Basic_Grammar_Notes/blob/master/Layui%20%E5%89%8D%E7%AB%AF%E6%A1%86%E6%9E%B6/Layui%20%E7%9A%84%E8%A1%A8%E5%8D%95.md)
     - [Layui 的动态数据表格](https://github.com/lcePolarBear/Python_Basic_Grammar_Notes/blob/master/Layui%20%E5%89%8D%E7%AB%AF%E6%A1%86%E6%9E%B6/Layui%20%E7%9A%84%E5%8A%A8%E6%80%81%E6%95%B0%E6%8D%AE%E8%A1%A8%E6%A0%BC.md)
     - [layui 的弹出层](https://github.com/lcePolarBear/Python_Basic_Grammar_Notes/blob/master/Layui%20%E5%89%8D%E7%AB%AF%E6%A1%86%E6%9E%B6/layui%20%E7%9A%84%E5%BC%B9%E5%87%BA%E5%B1%82.md)
+- 使用 Django 创建 k8s 运维平台
+    - 准备工作 - 通过客户端实现 Django 连接 ApiServer
+    - 实现 k8s 运维平台登陆界面的认证
+    - 完成 k8s 运维平台页面布局
+    - 实现 namespace 资源选择功能
+    - K8s 资源功能开发 
+        - Namespace
+        - Node
+        - PersistentVolume
+        - Deployment
+        - StatefulSet
+        - DaemonSet
+        - Pod
+        - Service
+        - Ingress
+        - ConfigMap
+        - PersistentVolumeClaim
+        - Secret
+    - 创建首页资源仪表盘
+    - 项目打包发布
 
 > 如果不小心把 django migrate 创建的表删除了且无法通过 migeate 同步的方式重建，参考[这篇文章](https://blog.csdn.net/HD243608836/article/details/106499830)可以重建
