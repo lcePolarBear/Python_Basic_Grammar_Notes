@@ -37,10 +37,10 @@ __2021/7/12 阿良的 Python 运维开发教程__
     - [Layui 的动态数据表格](https://github.com/lcePolarBear/Python_Basic_Grammar_Notes/blob/master/Layui%20%E5%89%8D%E7%AB%AF%E6%A1%86%E6%9E%B6/Layui%20%E7%9A%84%E5%8A%A8%E6%80%81%E6%95%B0%E6%8D%AE%E8%A1%A8%E6%A0%BC.md)
     - [layui 的弹出层](https://github.com/lcePolarBear/Python_Basic_Grammar_Notes/blob/master/Layui%20%E5%89%8D%E7%AB%AF%E6%A1%86%E6%9E%B6/layui%20%E7%9A%84%E5%BC%B9%E5%87%BA%E5%B1%82.md)
 - 使用 Django 创建 k8s 运维平台
-    - 准备工作 - 通过客户端实现 Django 连接 ApiServer
-    - 实现 k8s 运维平台登陆界面的认证
-    - 完成 k8s 运维平台页面布局
-    - 实现 namespace 资源选择功能
+    - [准备工作 - 通过客户端实现 Django 连接 ApiServer](https://github.com/lcePolarBear/Python_Basic_Grammar_Notes/blob/master/%E4%BD%BF%E7%94%A8%20Django%20%E5%88%9B%E5%BB%BA%20k8s%20%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C%20-%20%E9%80%9A%E8%BF%87%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AE%9E%E7%8E%B0%20Django%20%E8%BF%9E%E6%8E%A5%20ApiServer.md)
+    - [实现 k8s 运维平台登陆界面的认证](https://github.com/lcePolarBear/Python_Basic_Grammar_Notes/blob/master/%E4%BD%BF%E7%94%A8%20Django%20%E5%88%9B%E5%BB%BA%20k8s%20%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/%E5%AE%8C%E6%88%90%20k8s%20%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0%E9%A1%B5%E9%9D%A2%E5%B8%83%E5%B1%80.md)
+    - [完成 k8s 运维平台页面布局](https://github.com/lcePolarBear/Python_Basic_Grammar_Notes/blob/master/%E4%BD%BF%E7%94%A8%20Django%20%E5%88%9B%E5%BB%BA%20k8s%20%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/%E5%AE%8C%E6%88%90%20k8s%20%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0%E9%A1%B5%E9%9D%A2%E5%B8%83%E5%B1%80.md)
+    - [实现 namespace 资源选择功能](https://github.com/lcePolarBear/Python_Basic_Grammar_Notes/blob/master/%E4%BD%BF%E7%94%A8%20Django%20%E5%88%9B%E5%BB%BA%20k8s%20%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/%E5%AE%9E%E7%8E%B0%20namespace%20%E8%B5%84%E6%BA%90%E9%80%89%E6%8B%A9%E5%8A%9F%E8%83%BD.md)
     - K8s 资源功能开发 
         - Namespace
         - Node
@@ -54,7 +54,7 @@ __2021/7/12 阿良的 Python 运维开发教程__
         - ConfigMap
         - PersistentVolumeClaim
         - Secret
-    - 创建首页资源仪表盘
-    - 项目打包发布
+    - [创建首页资源仪表盘](https://github.com/lcePolarBear/Python_Basic_Grammar_Notes/blob/master/%E4%BD%BF%E7%94%A8%20Django%20%E5%88%9B%E5%BB%BA%20k8s%20%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/%E5%88%9B%E5%BB%BA%E8%B5%84%E6%BA%90%E4%BB%AA%E8%A1%A8%E7%9B%98.md)
+    - [项目打包发布](https://github.com/lcePolarBear/Python_Basic_Grammar_Notes/blob/master/%E4%BD%BF%E7%94%A8%20Django%20%E5%88%9B%E5%BB%BA%20k8s%20%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/%E9%A1%B9%E7%9B%AE%E6%89%93%E5%8C%85%E5%8F%91%E5%B8%83.md)
 
 > 如果不小心把 django migrate 创建的表删除了且无法通过 migeate 同步的方式重建，参考[这篇文章](https://blog.csdn.net/HD243608836/article/details/106499830)可以重建
