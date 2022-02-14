@@ -142,6 +142,8 @@ def index(request):
 ```python
 # dashboard/views.py
 def logout(request):
+    # 针对使用 kubeconfig 文件进行登陆的用户需要在注销时将 kubeconfig 信息删除
+    var search_key = $('input[name="name"]').val()
     request.session.flush()
     return redirect(login)
 ```
