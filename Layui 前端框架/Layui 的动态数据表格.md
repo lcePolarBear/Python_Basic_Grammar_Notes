@@ -18,7 +18,7 @@
             ,height: 315 //容器高度
                 ,url: '/user'
             ,cols: [[
-                {checkbox: true}
+                {checkbox: true} //触发表格行选择功能
                 ,{field: 'id', title: 'ID', width: 80, sort: true}
                 ,{field: 'username', title: '用户名', width: 120}
                 ,{field: 'age', title: '年龄', width: 120}
