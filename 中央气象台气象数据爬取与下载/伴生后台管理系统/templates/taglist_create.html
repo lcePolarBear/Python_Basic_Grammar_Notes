@@ -1,0 +1,106 @@
+<!--pods.html-->
+{% extends "base.html" %}
+{% block nav-item-1 %}layui-nav-itemed{% endblock %}
+{% block nav-child-1-1 %}layui-this{% endblock %}
+{% block content %}
+    {% csrf_token %}
+    <div id="ck">
+        <form class="layui-form" onsubmit="return false">
+            <div class="layui-form-item">
+                <label class="layui-form-label">属性标签</label>
+                <div class="layui-input-block">
+                    <input type="text" name="label" lay-verify="name" placeholder="请输入"
+                           class="layui-input" style="width: 800px" value="{{ label }}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">元素属性</label>
+                <div class="layui-input-block">
+                    <input type="text" name="attr_key" lay-verify="type" placeholder="请输入"
+                           class="layui-input" style="width: 800px" value="{{ attr_key }}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">元素值</label>
+                <div class="layui-input-block">
+                    <input type="text" name="attr_value" lay-verify="area" placeholder="请输入"
+                           class="layui-input" style="width: 800px" value="{{ attr_value }}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">标签</label>
+                <div class="layui-input-block">
+                    <input type="text" name="src" lay-verify="para" placeholder="请输入"
+                           class="layui-input" style="width: 800px" value="{{ src }}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="btn">立即提交</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="/static/layui/layui.js"></script>
+
+    <script>
+        layui.use(['layer', 'form', 'jquery'], function () {
+            var layer = layui.layer,
+                form = layui.form,
+                $ = layui.jquery,
+                csrf_token = $('[name="csrfmiddlewaretoken"]').val();
+            form.on('submit(btn)', function (data) {
+                data = data.field;
+                data['tagid'] = '{{ tagid }}';
+                if (data['tagid'] != 'False') {
+                    console.log("PUT")
+                    $.ajax({
+                        url: '{% url 'Taglist_func' %}',
+                        type: 'PUT',
+                        async: false,
+                        data: data,
+                        headers: {'X-CSRFToken': csrf_token},
+                        // 提交成功回调函数
+                        success: function (res) {
+                            if (res.code == '0') {
+                                layer.msg(res.msg, {icon: 6, time: 20000, btn: ['返回界面']}, function () {
+                                    window.location.href = '{% url 'mnc' %}'
+                                });
+                            } else {
+                                layer.msg(res.msg, {icon: 5})
+                            }
+                        },
+                        // 访问接口失败函数
+                        error: function (res) {
+                            layer.msg("服务器接口异常！", {icon: 5})
+                        },
+                    })
+                } else {
+                    console.log("POST")
+                    $.ajax({
+                        url: '{% url 'Taglist_func' %}',
+                        type: 'POST',
+                        async: false,
+                        data: data,
+                        headers: {'X-CSRFToken': csrf_token},
+                        // 提交成功回调函数
+                        success: function (res) {
+                            if (res.code == '0') {
+                                layer.msg(res.msg, {icon: 6, time: 20000, btn: ['返回界面']}, function () {
+                                    window.location.href = '{% url 'mnc' %}'
+                                });
+                            } else {
+                                layer.msg(res.msg, {icon: 5})
+                            }
+                        },
+                        // 访问接口失败函数
+                        error: function (res) {
+                            layer.msg("服务器接口异常！", {icon: 5})
+                        },
+                    })
+                }
+
+            });
+        })
+    </script>
+{% endblock %}

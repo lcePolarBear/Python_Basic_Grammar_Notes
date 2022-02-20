@@ -1,0 +1,42 @@
+<!--base.html 引用的 Layui 官方布局代码-->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>时代低空项目运维平台</title>
+    <link rel="stylesheet" href="/static/layui/css/layui.css">
+</head>
+<body>
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header layui-bg-black">
+        <!--顶部背景 div （忽略代码）-->
+        <div class="layui-logo layui-hide-xs layui-bg-black">时代低空项目运维平台</div>
+    </div>
+
+    <div class="layui-side layui-bg-cyan">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree layui-bg-cyan" lay-filter="test">
+                <li class="layui-nav-item {% block nav-item-1 %}{% endblock %}">
+                    <a class="" href="javascript:;">气象下载服务</a>
+                    <dl class="layui-nav-child">
+                        <!--添加 block 用于从子页面传入 layui-this 选项触发选中样式-->
+                        <dd class="{% block nav-child-1-1 %}{% endblock %}"><a href="{% url "mnc" %}">MNC 基础数据管理</a>
+                        </dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <div style="padding: 15px;">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+</div>
+< /body>
+< /html>

@@ -1,0 +1,159 @@
+<!--pods.html-->
+{% extends "base.html" %}
+{% block nav-item-1 %}layui-nav-itemed{% endblock %}
+{% block nav-child-1-1 %}layui-this{% endblock %}
+{% block content %}
+    <table class="layui-hide" id="Urllist" lay-filter="Urllist">
+        {% csrf_token %}
+    </table>
+
+    <table class="layui-hide" id="Taglist" lay-filter="Taglist">
+        {% csrf_token %}
+    </table>
+
+    <script type="text/html" id="Urllist_toolbar">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm" lay-event="addData">新增资源数据</button>
+        </div>
+    </script>
+
+    <script type="text/html" id="Urllist_bar">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
+
+    <script type="text/html" id="Taglist_toolbar">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm" lay-event="addData">新增属性数据</button>
+        </div>
+    </script>
+
+    <script type="text/html" id="Taglist_bar">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
+
+    <script src="/static/layui/layui.js"></script>
+
+    <script>
+        layui.use(['table', 'layer'], function () {
+            var table = layui.table;
+            var $ = layui.jquery;
+            var csrf_token = $('[name="csrfmiddlewaretoken"]').val();
+            table.render({
+                elem: '#Urllist'
+                , height: 540
+                , url: '/mnc/Urllist_func/'
+                , toolbar: '#Urllist_toolbar' //开启头部工具栏，并为其绑定左侧模板
+                , title: '资源信息表'
+                , cols: [[
+                    {field: 'urlid', title: 'ID', width: 80}
+                    , {field: 'name', title: '资源目标名', width: 180}
+                    , {field: 'type', title: '资源类型', width: 120, sort: true}
+                    , {field: 'area', title: '区域', width: 80}
+                    , {field: 'para', title: '参数', width: 80, sort: true}
+                    , {field: 'url', title: '资源网页 URL'}
+                    , {field: 'frequency', title: '刷新率', width: 80}
+                    , {field: 'tagid', title: '资源属性', width: 80}
+                    , {field: 'table_name', title: '存放表', width: 120, sort: true}
+                    , {field: 'datatime', title: '创建时间', width: 200, sort: true}
+                    , {fixed: 'right', title: '操作', toolbar: '#Urllist_bar', width: 120}
+                ]]
+                , page: true
+            });
+            table.render({
+                elem: '#Taglist'
+                , height: 280
+                , url: '/mnc/Taglist_func/'
+                , toolbar: '#Taglist_toolbar'
+                , title: '资源属性表'
+                , cols: [[
+                    {field: 'tagid', title: 'ID', width: 80}
+                    , {field: 'label', title: '标签属性', width: 180}
+                    , {field: 'attr_key', title: '元素属性', width: 120, sort: true}
+                    , {field: 'attr_value', title: '元素值', width: 80}
+                    , {field: 'src', title: '标签', width: 80, sort: true}
+                    , {field: 'datatime', title: '创建时间'}
+                    , {fixed: 'right', title: '操作', toolbar: '#Taglist_bar', width: 120}
+                ]]
+                , page: true
+            })
+            //头工具栏事件
+            table.on('toolbar(Urllist)', function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'addData':
+                        window.location.href = '{% url 'Urllist_create' %}'
+                        break;
+                }
+            });
+
+            table.on('toolbar(Taglist)', function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'addData':
+                        window.location.href = '{% url 'Taglist_create' %}'
+                        break;
+                }
+            });
+
+            //监听行工具事件
+            table.on('tool(Urllist)', function (obj) {
+                var data = obj.data;
+                var info = {'urlid': data.urlid};
+                if (obj.event === 'del') {
+                    layer.confirm('真的删除行么', function (index) {
+                        $.ajax({
+                            type: "DELETE"
+                            , url: "/mnc/Urllist_func/"
+                            , data: info
+                            , headers: {'X-CSRFToken': csrf_token}
+                            , success: function (result) {
+                                if (result.code == '0') {
+                                    obj.del();
+                                    layer.close(index);
+                                    layer.msg(result.msg)
+                                } else {
+                                    layer.msg(result.msg)
+                                }
+                            }
+                            , error: function () {
+                                layer.msg("服务器接口异常")
+                            }
+                        })
+                    });
+                } else if (obj.event === 'edit') {
+                    window.location.href = '{% url 'Urllist_create' %}?urlid=' + data.urlid + '&name=' + data.name + '&type=' + data.type + '&area=' + data.area + '&para=' + data.para + '&url=' + data.url + '&frequency=' + data.frequency + '&table_name=' + data.table_name + '&tag_id=' + data.tag_id
+                }
+            });
+            table.on('tool(Taglist)', function (obj) {
+                var data = obj.data;
+                var info = {'tagid': data.tagid};
+                if (obj.event === 'del') {
+                    layer.confirm('真的删除行么', function (index) {
+                        $.ajax({
+                            type: "DELETE"
+                            , url: "/mnc/Taglist_func/"
+                            , data: info
+                            , headers: {'X-CSRFToken': csrf_token}
+                            , success: function (result) {
+                                if (result.code == '0') {
+                                    obj.del();
+                                    layer.close(index);
+                                    layer.msg(result.msg)
+                                } else {
+                                    layer.msg(result.msg)
+                                }
+                            }
+                            , error: function () {
+                                layer.msg("服务器接口异常")
+                            }
+                        })
+                    });
+                } else if (obj.event === 'edit') {
+                    window.location.href = '{% url 'Taglist_create' %}?tagid=' + data.tagid + '&label=' + data.label + '&attr_key=' + data.attr_key + '&attr_value=' + data.attr_value + '&src=' + data.src
+                }
+            });
+        });
+    </script>
+{% endblock %}
