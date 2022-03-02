@@ -1,6 +1,5 @@
-import sys
+import sys, re, time
 from bs4 import BeautifulSoup
-import re
 from selenium import webdriver
 from kafka_connect import KafkaConnet
 from mysql_connect import DBConnet
@@ -35,7 +34,7 @@ class WorkLoad():
 
     def getHTMLText(self, url):
         try:
-            driver = webdriver.PhantomJS(executable_path='/opt/mnc2/phantomjs')  # phantomjs的绝对路径
+            driver = webdriver.PhantomJS(executable_path='./phantomjs')  # phantomjs的绝对路径
             driver.set_page_load_timeout(10)
             driver.set_script_timeout(10)
             driver.get(url)  # 获取网页
@@ -57,6 +56,7 @@ class WorkLoad():
         return tag
     
     def getContent(self, element_tag, src_value):
+        # 进入筛选，判断需要下载的信息为图片还是文字
         if src_value == "src":
             url = None
             for pageOptionEle in element_tag:
@@ -71,7 +71,15 @@ class WorkLoad():
                 if pageOptionEle is None:
                     return None
                 span = pageOptionEle.find_all("span", class_="sname")[0].string + " - " + pageOptionEle.find_all("span", class_="sname")[1].string + " - " + pageOptionEle.find("div", class_="col-xs-4 text-right").string
-                spanlList.append(span)
+                # 防止出现找到对应元素但内容为空的情况
+                if span is not None:
+                    spanlList.append(span)
+            # 在循环取出数据后，不能在 list 的最后一个元素插入当前的时间戳，不然会造成每一条数据都因时间戳不唯一而无法比较
+            """
+            datetime = int(time.time()*1000)
+            spanlList.append(datetime)
+            """
+
             return str(spanlList)
 
 if __name__ == '__main__':
