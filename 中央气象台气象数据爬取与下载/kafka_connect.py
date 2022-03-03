@@ -33,8 +33,11 @@ class KafkaConnet(object):
             key=id,  # 同一个key值，会被送至同一个分区
             value=value,
             partition=0)
-        print("kafka-" + kafka_topic + " send {}".format(value))
         try:
             future.get(timeout=10) # 监控是否发送成功
+            print("kafka-" + kafka_topic + " send {}".format(value))
+            # 成功返回 True
+            return True
         except Exception as e:  # 发送失败抛出kafka_errors
             print(str(e))
+            return False

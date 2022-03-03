@@ -74,11 +74,9 @@ class WorkLoad():
                 # 防止出现找到对应元素但内容为空的情况
                 if span is not None:
                     spanlList.append(span)
-            # 在循环取出数据后，不能在 list 的最后一个元素插入当前的时间戳，不然会造成每一条数据都因时间戳不唯一而无法比较
-            """
+            # 在循环取出数据后，在 list 的最后一个元素插入当前的时间戳
             datetime = int(time.time()*1000)
             spanlList.append(datetime)
-            """
 
             return str(spanlList)
 
