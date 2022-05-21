@@ -15,10 +15,7 @@ __2021/7/12 阿良的 Python 运维开发教程__
 - Django ORM 的基本使用
     - [内置管理后台和 Meta 类](https://github.com/lcePolarBear/Python_Basic_Grammar_Notes/blob/master/Django%20ORM%20%E7%9A%84%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/%E5%86%85%E7%BD%AE%E7%AE%A1%E7%90%86%E5%90%8E%E5%8F%B0%E5%92%8C%20Meta%20%E7%B1%BB.md)
     - [ORM 增删查改](https://github.com/lcePolarBear/Python_Basic_Grammar_Notes/blob/master/Django%20ORM%20%E7%9A%84%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/ORM%20%E5%A2%9E%E5%88%A0%E6%9F%A5%E6%94%B9.md)
-- Django 多表操作
-    - [一对一](https://github.com/lcePolarBear/Python_Basic_Grammar_Notes/blob/master/Django%20%E5%A4%9A%E8%A1%A8%E6%93%8D%E4%BD%9C/%E4%B8%80%E5%AF%B9%E4%B8%80.md)
-    - [一对多](https://github.com/lcePolarBear/Python_Basic_Grammar_Notes/blob/master/Django%20%E5%A4%9A%E8%A1%A8%E6%93%8D%E4%BD%9C/%E4%B8%80%E5%AF%B9%E5%A4%9A.md)
-    - [多对多](https://github.com/lcePolarBear/Python_Basic_Grammar_Notes/blob/master/Django%20%E5%A4%9A%E8%A1%A8%E6%93%8D%E4%BD%9C/%E5%A4%9A%E5%AF%B9%E5%A4%9A.md)
+- [Django 多表操作](./%E9%98%BF%E8%89%AF%E7%9A%84%20Python%20%E8%BF%90%E7%BB%B4%E5%BC%80%E5%8F%91%E6%95%99%E7%A8%8B/Django%20%E5%A4%9A%E8%A1%A8%E6%93%8D%E4%BD%9C/README.md)
 - Django 内置的用户认证
     - [用户认证系统](https://github.com/lcePolarBear/Python_Basic_Grammar_Notes/blob/master/Django%20%E7%94%A8%E6%88%B7%E8%AE%A4%E8%AF%81%E7%B3%BB%E7%BB%9F/%E7%94%A8%E6%88%B7%E8%AE%A4%E8%AF%81%E7%B3%BB%E7%BB%9F.md)
 - Django Session 管理
