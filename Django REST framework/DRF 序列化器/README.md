@@ -315,7 +315,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 如果提交API的数据与序列化器要求的格式不符合，序列化器就会出现错误。这时就可以重写to_internal_value()方法只提取出我们需要的数据
 
 ```json
-//提交的
+/*提交的数据*/
 
 {
 	"project_data": {
